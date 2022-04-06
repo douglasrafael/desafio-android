@@ -9,6 +9,8 @@ import com.picpay.desafio.android.data.repository.datasource.UserDataSource
 import com.picpay.desafio.android.data.repository.datasource.network.NetworkUserDataSourceImpl
 import com.picpay.desafio.android.data.repository.datasource.network.PicPayService
 import com.picpay.desafio.android.data.repository.helpers.NetworkHelper
+import com.picpay.desafio.android.data.repository.helpers.NetworkInterceptor
+import com.picpay.desafio.android.data.repository.helpers.OfflineInterceptor
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -18,8 +20,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
-
 
 const val BASE_URL = "https://609a908e0f5a13001721b74e.mockapi.io/picpay/api/"
 
@@ -30,9 +30,15 @@ val remoteDataModule = module {
     factory { NetworkHelper(gson = get()) }
 
     single { provideRetrofit(factory = get(), client = get()) }
-    single { provideHttpClient(cache = get(), loggerInterceptor = get()) }
+    single {
+        provideHttpClient(
+            cache = get(),
+            loggerInterceptor = get(),
+            networkInterceptor = NetworkInterceptor(),
+            offlineInterceptor = OfflineInterceptor(context = get())
+        )
+    }
     single { provideService(retrofit = get()) }
-
     single<UserDataSource> { NetworkUserDataSourceImpl(api = get(), networkHelper = get()) }
     single<UserDataRepository> { UserDataRepositoryImpl(remoteDataSource = get()) }
 }
@@ -51,14 +57,18 @@ fun provideRetrofit(factory: Gson, client: OkHttpClient): Retrofit {
 /**
  * http client security.
  */
-fun provideHttpClient(cache: Cache, loggerInterceptor: Interceptor): OkHttpClient {
+fun provideHttpClient(
+    cache: Cache,
+    loggerInterceptor: Interceptor,
+    networkInterceptor: Interceptor,
+    offlineInterceptor: Interceptor
+): OkHttpClient {
     return OkHttpClient
         .Builder()
         .cache(cache)
-        .connectTimeout(1, TimeUnit.MINUTES)
-        .readTimeout(1, TimeUnit.MINUTES)
-        .writeTimeout(1, TimeUnit.MINUTES)
         .addInterceptor(loggerInterceptor)
+        .addNetworkInterceptor(networkInterceptor)
+        .addInterceptor(offlineInterceptor)
         .build()
 }
 
@@ -66,8 +76,8 @@ fun provideHttpClient(cache: Cache, loggerInterceptor: Interceptor): OkHttpClien
  * Cache instance used in OkHttpClient.
  */
 fun provideCache(application: Application): Cache {
-    val cacheSize = 10 * 1024 * 1024
-    return Cache(application.cacheDir, cacheSize.toLong())
+    val cacheSize = (10 * 1024 * 1024).toLong() // 10 MB
+    return Cache(application.cacheDir, cacheSize)
 }
 
 /**

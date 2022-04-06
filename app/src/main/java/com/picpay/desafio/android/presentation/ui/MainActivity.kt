@@ -8,11 +8,11 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.picpay.desafio.android.R
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var adapter: UserListAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private val url = "https://609a908e0f5a13001721b74e.mockapi.io/picpay/api/"
 
@@ -61,22 +62,26 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.user_list_progress_bar)
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout)
 
         adapter = UserListAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Create a new coroutine since repeatOnLifecycle is a suspend function
+        swipeRefreshLayout.setOnRefreshListener {
+            mViewModel.getUsers()
+        }
+
         lifecycleScope.launch {
-            // The block passed to repeatOnLifecycle is executed when the lifecycle
-            // is at least STARTED and is cancelled when the lifecycle is STOPPED.
-            // It automatically restarts the block when the lifecycle is STARTED again.
+            // Safely collect from locationFlow when the lifecycle is STARTED
+            // and stops collection when the lifecycle is STOPPED
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // Safely collect from locationFlow when the lifecycle is STARTED
-                // and stops collection when the lifecycle is STOPPED
                 mViewModel.uiViewState.collect {result ->
                     when (result) {
-                        UserViewState.Loading -> progressBar.visibility = View.VISIBLE
+                        UserViewState.Loading -> {
+                            swipeRefreshLayout.isRefreshing = false
+                            progressBar.visibility = View.VISIBLE
+                        }
                         is UserViewState.Error -> {
                             progressBar.visibility = View.GONE
                             recyclerView.visibility = View.GONE

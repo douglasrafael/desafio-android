@@ -15,10 +15,10 @@ class UserViewModel(private val getUsersUseCase: GetUsersUseCase) : ViewModel() 
     val uiViewState: StateFlow<UserViewState> = _uiViewState
 
     init {
-        listUsers()
+        getUsers()
     }
 
-    private fun listUsers() {
+    fun getUsers() {
         viewModelScope.launch {
             getUsersUseCase.invoke().collect { result ->
                 _uiViewState.value = when (result) {
