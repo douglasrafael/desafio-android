@@ -8,7 +8,7 @@ import com.picpay.desafio.android.databinding.ListItemUserBinding
 import com.picpay.desafio.android.domain.model.User
 
 class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>() {
-    var users = emptyList<User>()
+    private var users = emptyList<User>()
         set(value) {
             val result = DiffUtil.calculateDiff(UserListDiffCallback(field, value))
             result.dispatchUpdatesTo(this)
@@ -26,6 +26,11 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>
     }
 
     override fun getItemCount(): Int = users.size
+
+    fun update(data: List<User>) {
+        users = data
+        notifyItemChanged(0, data.size)
+    }
 
     inner class UserListViewHolder(
         private val binding: ListItemUserBinding

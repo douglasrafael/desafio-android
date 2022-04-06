@@ -57,6 +57,10 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
+    // navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
     // Koin Test features
     testImplementation "io.insert-koin:koin-test:$koin_version"
 

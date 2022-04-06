@@ -12,9 +12,7 @@ class GetUsersUseCaseImpl(private val repository: UserDataRepository) : GetUsers
         emit(ResultWrapper.Loading)
         when (val result = repository.getUsers()) {
             is ResultWrapper.Success -> emit(ResultWrapper.Success(result.value.map { it.toModel() }))
-            is ResultWrapper.Error -> {
-                emit(ResultWrapper.Error(result.code, result.error))
-            }
+            is ResultWrapper.Error -> emit(ResultWrapper.Error(result.code, result.error))
         }
     }
 }
