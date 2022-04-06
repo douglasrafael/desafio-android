@@ -2,5 +2,6 @@
     <string name="app_name">PicPay</string>
     <string name="title">Contatos</string>
     <string name="error">Ocorreu um erro. Tente novamente.</string>
+    <string name="accessibility_img_user">Imagem do usuário %s</string>
 
 </resources>
