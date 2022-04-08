@@ -27,6 +27,10 @@ android {
         }
     }
 
+    testOptions {
+        animationsDisabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -75,7 +79,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
-//    implementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
+    implementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6")
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
@@ -84,10 +88,14 @@ dependencies {
 
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
+    testImplementation 'app.cash.turbine:turbine:0.7.0'
 
     androidTestImplementation "androidx.test:runner:$test_runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test:core-ktx:$core_ktx_test_version"
+    androidTestImplementation "io.mockk:mockk-android:1.12.3"
+    debugImplementation("androidx.fragment:fragment-testing:1.4.1")
 }

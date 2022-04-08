@@ -11,7 +11,7 @@ class GetUsersUseCaseImpl(private val repository: UserDataRepository) : GetUsers
     override fun invoke(): Flow<ResultWrapper<List<User>>> = flow {
         emit(ResultWrapper.Loading)
         when (val result = repository.getUsers()) {
-            is ResultWrapper.Success -> emit(ResultWrapper.Success(result.value.map { it.toModel() }))
+            is ResultWrapper.Success -> emit(ResultWrapper.Success(result.value.toModel()))
             is ResultWrapper.Error -> emit(ResultWrapper.Error(result.code, result.error))
         }
     }

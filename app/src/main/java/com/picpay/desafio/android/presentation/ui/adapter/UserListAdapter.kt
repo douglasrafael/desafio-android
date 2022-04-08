@@ -25,6 +25,8 @@ class UserListAdapter : RecyclerView.Adapter<UserListAdapter.UserListViewHolder>
         holder.bind(users[position])
     }
 
+    fun getCount() = users.size
+
     override fun getItemCount(): Int = users.size
 
     fun update(data: List<User>) {

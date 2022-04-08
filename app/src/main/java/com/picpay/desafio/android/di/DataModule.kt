@@ -21,8 +21,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
-const val BASE_URL = "https://609a908e0f5a13001721b74e.mockapi.io/picpay/api/"
-//const val BASE_URL = "http://192.168.1.13:3000/"
+const val BASE_URL = "https://609a908e0f5a13001721b74e.mockapi.io/picpay/api"
+//const val BASE_URL = "http://192.168.1.13:3000"
 
 val remoteDataModule = module {
     factory { provideGson() }

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import timber.log.Timber
 import java.io.IOException
 
 class NetworkHelper(private val gson: Gson) {
@@ -32,9 +33,9 @@ class NetworkHelper(private val gson: Gson) {
         return try {
             throwable.response()?.errorBody()?.charStream()?.let {
                 gson.fromJson(it, object : TypeToken<ErrorResponse>() {}.type)
-            }
+            } ?: ErrorResponse(throwable.code(), throwable.message())
         } catch (exception: Exception) {
-            ErrorResponse(throwable.code(), throwable.response()?.errorBody()?.string())
+            ErrorResponse(throwable.code(), throwable.response()?.message())
         }
     }
 }
