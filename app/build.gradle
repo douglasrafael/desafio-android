@@ -52,50 +52,53 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout_version"
     implementation "com.google.android.material:material:$material_version"
 
-    // Koin Core features
+    // Koin
     implementation "io.insert-koin:koin-core:$koin_version"
-    // Koin main features for Android
     implementation "io.insert-koin:koin-android:$koin_version"
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+
+    // lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 
-    // Koin Test features
-    testImplementation "io.insert-koin:koin-test:$koin_version"
+    // gson
+    implementation "com.google.code.gson:gson:$gson_version"
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-
-    implementation 'com.google.code.gson:gson:2.9.0'
-
+    // retrofit and okhttp3
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
-    implementation "com.squareup.okhttp3:mockwebserver:$okhttp_version"
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6")
-    implementation 'com.jakewharton.timber:timber:5.0.1'
 
+    // logs
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    // picasso and image
     implementation "com.squareup.picasso:picasso:$picasso_version"
     implementation "de.hdodenhof:circleimageview:$circleimageview_version"
 
+    // tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "androidx.arch.core:core-testing:$core_testing_version"
-    testImplementation 'app.cash.turbine:turbine:0.7.0'
+    testImplementation "app.cash.turbine:turbine:$turbine_version"
+    testImplementation "io.insert-koin:koin-test:$koin_version"
 
     androidTestImplementation "androidx.test:runner:$test_runner_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test:core-ktx:$core_ktx_test_version"
-    androidTestImplementation "io.mockk:mockk-android:1.12.3"
-    debugImplementation("androidx.fragment:fragment-testing:1.4.1")
+    androidTestImplementation "io.mockk:mockk-android:$mockk_android_version"
+    debugImplementation("androidx.fragment:fragment-testing:$fragment_testing_version")
 }

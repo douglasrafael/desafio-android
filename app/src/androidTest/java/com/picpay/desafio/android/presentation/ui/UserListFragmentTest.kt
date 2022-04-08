@@ -20,8 +20,10 @@ import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
@@ -29,6 +31,7 @@ import org.koin.dsl.module
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4ClassRunner::class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class UserListFragmentTest {
 
     private lateinit var scenario: FragmentScenario<UserListFragment>
@@ -51,11 +54,12 @@ class UserListFragmentTest {
 
     @After
     fun setupDown() {
+        scenario.onFragment { fragment -> fragment.buildViewState(state = UserViewState.Init) }
         unloadKoinModules(modulesTest)
     }
 
     @Test
-    fun shouldDisplayViewWithInitialState() {
+    fun shouldBDisplayViewWithInitialState() {
         scenario.onFragment { fragment -> fragment.buildViewState(state = UserViewState.Init) }
 
         onView(withId(R.id.swipeRefreshLayout)).check(matches(isDisplayed()))
@@ -65,7 +69,42 @@ class UserListFragmentTest {
     }
 
     @Test
-    fun shouldDisplayTheCorrectTitle() {
+    fun shouldCDisplayViewWithLoadingState() {
+        scenario.onFragment { fragment -> fragment.buildViewState(state = UserViewState.Loading) }
+
+        onView(withId(R.id.swipeRefreshLayout)).check(matches(isDisplayed()))
+        onView(withId(R.id.listProgressBar)).check(matches(isDisplayed()))
+        onView(withId(R.id.title)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun shouldDisplayViewWithSuccessState() {
+        scenario.onFragment { fragment ->
+            fragment.buildViewState(state = UserViewState.Success(emptyList()))
+        }
+
+        onView(withId(R.id.swipeRefreshLayout)).check(matches(isDisplayed()))
+        onView(withId(R.id.listProgressBar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.title)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    @Test
+    fun shouldEDisplayViewWithErrorState() {
+        val errorMessage = "Error Test"
+        scenario.onFragment { fragment ->
+            fragment.buildViewState(state = UserViewState.Error(errorMessage))
+        }
+
+        onView(withId(R.id.swipeRefreshLayout)).check(matches(isDisplayed()))
+        onView(withId(R.id.listProgressBar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.title)).check(matches(isDisplayed()))
+        onView(withId(R.id.recyclerView)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun shouldFDisplayTheCorrectTitle() {
         scenario.onFragment { fragment ->
             fragment.buildViewState(state = UserViewState.Success(emptyList()))
         }
@@ -76,7 +115,7 @@ class UserListFragmentTest {
     }
 
     @Test
-    fun shouldOther() {
+    fun shouldADisplayItemsInRecyclerView() {
         val users = listOf(
             User(
                 id = 1,
@@ -89,15 +128,14 @@ class UserListFragmentTest {
             emit(ResultWrapper.Loading)
             emit(ResultWrapper.Success(users))
         }
-        scenario.onFragment { it._viewModel.getUsers() }
+        scenario.onFragment { fragment -> fragment.loadUsers() }
         val recyclerView = withParent(withParent(withId(R.id.recyclerView)))
 
         // Check the displayed picture
         onView(
             allOf(
                 withId(R.id.picture),
-                recyclerView,
-                isDisplayed()
+                recyclerView
             )
         ).check(
             matches(

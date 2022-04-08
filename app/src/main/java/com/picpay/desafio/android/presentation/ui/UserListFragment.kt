@@ -1,7 +1,6 @@
 package com.picpay.desafio.android.presentation.ui
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment() {
     private var _binding: FragmentUserListBinding? = null
-    private var mLayoutManagerSavedState: Parcelable? = null
-    val _viewModel: UserViewModel by viewModel()
+    private val _viewModel: UserViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +50,10 @@ class UserListFragment : Fragment() {
         super.onDestroyView()
     }
 
+    fun loadUsers() {
+        _viewModel.getUsers()
+    }
+
     fun buildViewState(state: UserViewState) {
         when (state) {
             UserViewState.Init -> buildViewInit()
@@ -68,13 +70,7 @@ class UserListFragment : Fragment() {
 
     private fun buildViewShowData(users: List<User>) {
         buildViewLoading(false)
-        _binding?.boxContent?.visibility = View.VISIBLE
         _binding?.adapter?.update(users)
-
-        mLayoutManagerSavedState?.let { state ->
-            _binding?.recyclerView?.layoutManager?.onRestoreInstanceState(state)
-            mLayoutManagerSavedState = null
-        }
     }
 
     private fun buildViewShowError(message: String?) {
@@ -87,6 +83,7 @@ class UserListFragment : Fragment() {
 
     private fun buildViewLoading(isActive: Boolean) {
         _binding?.swipeRefreshLayout?.isRefreshing = false
+        _binding?.boxContent?.visibility = View.VISIBLE
         when (isActive) {
             true -> {
                 _binding?.listProgressBar?.visibility = View.VISIBLE

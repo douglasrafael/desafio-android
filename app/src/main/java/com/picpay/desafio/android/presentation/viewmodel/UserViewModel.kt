@@ -19,7 +19,6 @@ class UserViewModel(
     val viewState: StateFlow<UserViewState> get() = _viewState
 
     fun getUsers() {
-        println("<<<<<<<<<<<<<< PASSOUUUUUUUUUUU")
         viewModelScope.launch(dispatcher) {
             getUsersUseCase.invoke().collect { result ->
                 _viewState.emit(
