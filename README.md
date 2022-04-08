@@ -20,3 +20,22 @@ Com o passar do tempo identificamos alguns problemas que impedem esse aplicativo
 Boa sorte! =)
 
 Ps.: Fique à vontade para editar o projeto inteiro, organização de pastas e módulos, bem como as dependências utilizadas
+
+---
+## Solução
+
+### Arquitetura
+<img src="https://i.imgur.com/ARqH48V.png" />
+
+### Overview
+- Adicionado arquitetura limpa. Camadas: data, domain e presentation
+- Atualizado gradle e versão de dependências
+- Adicionado data binding
+- Adicionado ViewModel com FlowState
+- Adicionado navigation componet
+- Adicionado Koin para DI
+- Adicionado Binding Adapter para carregamento de imagem
+- Adicionado Kotlin Extensions
+- Adicionado Interceptors para cache (quando houver conexão usar cache por 10s, se não houver, usar cache salvo com duração de 1 dia)
+- Adicionado testes de unidade e instrumetação
+
