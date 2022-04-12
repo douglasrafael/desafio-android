@@ -6,7 +6,6 @@ import com.picpay.desafio.android.data.repository.helpers.NetworkHelper
 import com.picpay.desafio.android.data.repository.helpers.ResultWrapper
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import timber.log.Timber
 
 class NetworkUserDataSourceImpl(
     private val api: PicPayService,
